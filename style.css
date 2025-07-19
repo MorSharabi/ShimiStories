@@ -84,8 +84,8 @@ h1 {
 }
 /* Style for the image loader */
 .image-loader {
-    width: 200px; /* Adjust size as needed */
-    height: 400px;
+    width: 100px; /* Adjust size as needed */
+    height: 100px;
     display: block; /* Always visible */
     margin: 20px auto; /* Center the image */
     /* Animation will be toggled by JavaScript */
