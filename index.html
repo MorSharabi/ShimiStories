@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phrase Dispenser</title>
+    <title>סיפורי שימי</title>
     <!-- Tailwind CSS CDN for easy styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Link to the external stylesheet -->
@@ -11,15 +11,15 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">Phrase Dispenser</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">סיפורי שימי</h1>
         <div id="phraseDisplay" class="phrase-display">
-            Click the button to get a phrase!
+            <!-- Initial phrase or prompt will be loaded here by JavaScript -->
         </div>
         <div id="phraseUrlDisplay" class="url-display">
             <!-- URL will be displayed here -->
         </div>
         <button id="choosePhraseBtn" class="choose-button">
-            Choose Phrase
+            !תביא סיפור
         </button>
     </div>
 
@@ -29,14 +29,32 @@
         // Get references to the HTML elements
         const choosePhraseBtn = document.getElementById('choosePhraseBtn');
         const phraseDisplay = document.getElementById('phraseDisplay');
-        const phraseUrlDisplay = document.getElementById('phraseUrlDisplay'); // New element for URL
+        const phraseUrlDisplay = document.getElementById('phraseUrlDisplay');
+
+        // Array to keep track of indices of phrases that have already been displayed
+        let displayedPhraseIndices = [];
 
         // Function to display a random phrase and its URL
         function displayRandomPhrase() {
-            // Generate a random index based on the phrases array length
-            const randomIndex = Math.floor(Math.random() * phrases.length);
-            // Get the phrase object at the random index
-            const randomPhraseObject = phrases[randomIndex];
+            // If all phrases have been displayed, reset the array to start a new cycle
+            if (displayedPhraseIndices.length === phrases.length) {
+                displayedPhraseIndices = []; // Reset the stack
+                console.log("All phrases displayed. Resetting stack."); // Optional: log to console
+            }
+
+            let randomIndex;
+            let randomPhraseObject;
+            let isDuplicate;
+
+            // Loop until a unique phrase (index not yet displayed) is found
+            do {
+                randomIndex = Math.floor(Math.random() * phrases.length);
+                randomPhraseObject = phrases[randomIndex];
+                isDuplicate = displayedPhraseIndices.includes(randomIndex);
+            } while (isDuplicate);
+
+            // Add the chosen unique index to the list of displayed phrases
+            displayedPhraseIndices.push(randomIndex);
 
             // Create a clickable link for the phrase/title
             const phraseLink = document.createElement('a');
@@ -55,6 +73,9 @@
 
         // Add an event listener to the button
         choosePhraseBtn.addEventListener('click', displayRandomPhrase);
+
+        // Display an initial phrase when the page loads
+        document.addEventListener('DOMContentLoaded', displayRandomPhrase);
     </script>
 </body>
 </html>
