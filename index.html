@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phrase Dispenser</title>
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font and basic layout */
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            margin: 0;
+            padding: 20px; /* Add some padding for smaller screens */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+        .container {
+            background-color: #ffffff; /* White background for the content area */
+            padding: 2.5rem; /* Increased padding */
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
+            text-align: center;
+            max-width: 90%; /* Responsive max-width */
+            width: 500px; /* Fixed width for larger screens */
+        }
+        .phrase-display {
+            min-height: 80px; /* Ensure space even when no phrase is displayed */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem; /* Larger font size */
+            font-weight: 600; /* Semi-bold */
+            color: #334155; /* Darker text color */
+            margin-bottom: 2rem; /* More space below the phrase */
+            padding: 1rem;
+            border: 2px dashed #cbd5e1; /* Dashed border for visual interest */
+            border-radius: 0.75rem; /* Rounded corners for the display area */
+        }
+        .choose-button {
+            background-image: linear-gradient(to right, #6366f1, #8b5cf6); /* Gradient background */
+            color: white;
+            padding: 1rem 2.5rem; /* Larger padding for button */
+            border-radius: 0.75rem; /* Rounded corners */
+            font-size: 1.125rem; /* Larger font size */
+            font-weight: 700; /* Bold text */
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease; /* Smooth transition for hover effects */
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4); /* Shadow matching gradient */
+        }
+        .choose-button:hover {
+            transform: translateY(-3px); /* Lift effect on hover */
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.6); /* Enhanced shadow on hover */
+        }
+        .choose-button:active {
+            transform: translateY(0); /* Press effect on click */
+            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3); /* Smaller shadow on active */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Phrase Dispenser</h1>
+        <div id="phraseDisplay" class="phrase-display">
+            Click the button to get a phrase!
+        </div>
+        <button id="choosePhraseBtn" class="choose-button">
+            Choose Phrase
+        </button>
+    </div>
+
+    <script>
+        // Define your JSON phrase stack
+        const phrases = [
+            "The early bird catches the worm.",
+            "Actions speak louder than words.",
+            "When in Rome, do as the Romans do.",
+            "Look before you leap.",
+            "Two heads are better than one.",
+            "Every cloud has a silver lining.",
+            "Beggars can't be choosers.",
+            "Don't count your chickens before they hatch.",
+            "A stitch in time saves nine.",
+            "Better late than never."
+        ];
+
+        // Get references to the HTML elements
+        const choosePhraseBtn = document.getElementById('choosePhraseBtn');
+        const phraseDisplay = document.getElementById('phraseDisplay');
+
+        // Function to display a random phrase
+        function displayRandomPhrase() {
+            // Generate a random index based on the phrases array length
+            const randomIndex = Math.floor(Math.random() * phrases.length);
+            // Get the phrase at the random index
+            const randomPhrase = phrases[randomIndex];
+            // Update the text content of the phrase display area
+            phraseDisplay.textContent = randomPhrase;
+        }
+
+        // Add an event listener to the button
+        choosePhraseBtn.addEventListener('click', displayRandomPhrase);
+    </script>
+</body>
+</html>
