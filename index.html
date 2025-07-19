@@ -37,11 +37,9 @@
         // Array to keep track of indices of phrases that have already been displayed
         let displayedPhraseIndices = [];
 
-        // Function to display a random phrase and its URL
         function displayRandomPhrase() {
             // Hide phrase content
             phraseDisplay.style.display = 'none';
-            // Removed phraseUrlDisplay.style.display as the element is no longer in HTML
 
             // Add 'spinning' class to start animation
             imageLoader.classList.add('spinning');
@@ -53,7 +51,6 @@
 
                 // Show phrase content
                 phraseDisplay.style.display = 'flex'; // Restore display for phrase
-                // Removed phraseUrlDisplay.style.display as the element is no longer in HTML
 
                 // If all phrases have been displayed, reset the array to start a new cycle
                 if (displayedPhraseIndices.length === phrases.length) {
@@ -75,18 +72,22 @@
                 // Add the chosen unique index to the list of displayed phrases
                 displayedPhraseIndices.push(randomIndex);
 
-                // Create a clickable link for the phrase/title
-                const phraseLink = document.createElement('a');
-                phraseLink.href = randomPhraseObject.url;
-                phraseLink.textContent = randomPhraseObject.phrase;
-                phraseLink.target = "_blank"; // Open link in a new tab
-                phraseLink.classList.add('phrase-link'); // Add a class for styling if needed
+                // Clear previous content
+                phraseDisplay.innerHTML = '';
 
-                // Clear previous content and append the new link
-                phraseDisplay.innerHTML = ''; // Clear existing content
-                phraseDisplay.appendChild(phraseLink);
-
-                // Removed phraseUrlDisplay.innerHTML as the element is no longer in HTML
+                // Check if the phrase object has a URL
+                if (randomPhraseObject.url) {
+                    // Create a clickable link for the phrase/title
+                    const phraseLink = document.createElement('a');
+                    phraseLink.href = randomPhraseObject.url;
+                    phraseLink.textContent = randomPhraseObject.phrase;
+                    phraseLink.target = "_blank"; // Open link in a new tab
+                    phraseLink.classList.add('phrase-link'); // Add a class for styling if needed
+                    phraseDisplay.appendChild(phraseLink);
+                } else {
+                    // If no URL, just display the phrase as text
+                    phraseDisplay.textContent = randomPhraseObject.phrase;
+                }
 
             }, 2000); // 2000 milliseconds = 2 seconds
         }
