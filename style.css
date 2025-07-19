@@ -77,3 +77,19 @@ h1 {
     color: #2563eb; /* Slightly lighter blue on hover */
     text-decoration: underline; /* Underline on hover */
 }
+  /* CSS for the spinning loader */
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* Style for the image loader */
+.image-loader {
+    width: 200px; /* Adjust size as needed */
+    height: 400px;
+    display: block; /* Always visible */
+    margin: 20px auto; /* Center the image */
+    /* Animation will be toggled by JavaScript */
+}
+.image-loader.spinning {
+    animation: spin 1s linear infinite; /* Apply spin animation only when 'spinning' class is present */
+}

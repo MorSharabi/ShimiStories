@@ -8,24 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Link to the external stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* CSS for the spinning loader */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        /* Style for the image loader */
-        .image-loader {
-            width: 60px; /* Adjust size as needed */
-            height: 60px;
-            display: block; /* Always visible */
-            margin: 20px auto; /* Center the image */
-            /* Animation will be toggled by JavaScript */
-        }
-        .image-loader.spinning {
-            animation: spin 1s linear infinite; /* Apply spin animation only when 'spinning' class is present */
-        }
-    </style>
+
 </head>
 <body>
     <div class="container">
@@ -35,7 +18,7 @@
         </div>
 
         <!-- Image loader element -->
-        <img id="imageLoader" src="https://placehold.co/60x60/3b82f6/ffffff?text=Loading" alt="Loading Spinner" class="image-loader">
+        <img id="imageLoader" src="shimiThinking.jpeg" alt="Loading Spinner" class="image-loader">
 
         <button id="choosePhraseBtn" class="choose-button">
             !תביא סיפור
