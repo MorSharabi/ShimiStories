@@ -6,18 +6,13 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #e0f2fe; /* Light sky blue background */
-    margin: 0;
-    padding: 20px; /* Add some padding for smaller screens */
-    box-sizing: border-box; /* Include padding in element's total width and height */
 }
 .container {
-    background-color: #ffffff; /* White background for the content area */
-    padding: 3rem; /* Increased padding for a more spacious feel */
-    border-radius: 1.5rem; /* More rounded corners */
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Deeper, softer shadow */
+    background-color: transparent; /* White background for the content area */
     text-align: center;
-    border: 1px solid #bfdbfe; /* Subtle light blue border */
     height: 100%;
+    min-width: 100%;
+    max-width: 100%;
 }
 h1 {
     color: #1e3a8a; /* Darker blue for the heading */
@@ -82,7 +77,7 @@ h1 {
     display: flex;
     align-items: center; /* Vertically align items in the center */
     justify-content: center; /* Horizontally center content */
-    margin-bottom: 20px; /* Add some space below the wrapper */
+    margin-top: 200px; /* Add some space below the wrapper */
     min-height: 100px; /* Ensure enough height for content */
     gap: 20px;
     width: 100%;
@@ -107,24 +102,33 @@ h1 {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 24px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    padding-left: 80px;
+    padding-right: 80px;
     height: 100%;
     /* NEW: Background image properties */
-    background-image: url('shimiGag.jpeg'); /* Replaced with your image path */
-    background-size: cover; /* Cover the entire section */
+    background-image: url('shimiBar.jpg'); /* Replaced with your image path */
+    background-size: 100% 100%; /* Cover the entire section */
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */
     min-height: 300px; /* Ensure enough height to see the background */
-    border-radius: 1.5rem; /* Match container border-radius */
     overflow: hidden; /* Ensure image doesn't spill out of rounded corners */
 }
 
-
+.home-page-section-title {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding-right: 20px;
+    padding-top: 20px;
+}
 
 .home-page-section h2 {
-    font-size: 24px;
+    font-size: 48px;
     font-weight: 800;
-    color: #1e3a8a; /* Dark blue */
+    color: white; /* Dark blue */
     line-height: 1.2;
     padding-bottom: 8px;
 }
