@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,35 +11,36 @@
     <link rel="stylesheet" href="style.css">
     <!-- All custom styles have been moved to style.css -->
 </head>
+
 <body>
     <div class="container">
-        <!-- Home Page Section -->
-        <div id="homePageSection" class="home-page-section">
-            <div class="home-content-row">
-                <div>
-                    <h2>ברוכים הבאים לסיפורי שימי!</h2>
-                </div>
-                <img src="https://placehold.co/300x200/facc15/1e3a8a?text=Shimi+Stories" alt="Home Page Image" class="home-page-image">
-            </div>
-            <button id="goToDispenserBtn" class="home-button">
-                התחל סיפורים!
-            </button>
+       <!-- Home Page Section -->
+       <div id="homePageSection" class="home-page-section">
+        <div>
+            <h2>!ברוכים הבאים לסיפורי שימי</h2>
         </div>
+        <div class="home-button-container">
+            <button id="goToDispenserBtn" class="home-button">התחל סיפורים</button>
+        </div>
+    </div>
 
-        <!-- Phrase Dispenser Section (Initially Hidden) -->
-        <div id="phraseDispenserSection" class="phrase-dispenser-section">
-
-            <div class="content-wrapper">
-                <div id="phraseDisplay" class="phrase-display">
-                    <!-- Initial phrase or prompt will be loaded here by JavaScript -->
-                </div>
-                <!-- Image loader element -->
-                <img id="imageLoader" src="your-image-name.gif" alt="Loading Spinner" class="image-loader">
-                <!-- IMPORTANT: Replace "your-image-name.gif" with the actual filename of your image -->
+    <!-- Phrase Dispenser Section (Initially Hidden) -->
+    <div id="phraseDispenserSection" class="phrase-dispenser-section">
+        <div class="content-wrapper">
+            <div id="phraseDisplay" class="phrase-display">
+                <!-- Initial phrase or prompt will be loaded here by JavaScript -->
             </div>
-
+            <!-- Image loader element -->
+            <div>
+                <img id="imageLoader" src="shimiThinkingSmall.jpeg" alt="Loading Spinner" class="image-loader">
+            </div>
+        </div>
+        <div class="home-button-container"> <!-- Reusing this class for button grouping -->
             <button id="choosePhraseBtn" class="choose-button">
                 !תביא סיפור
+            </button>
+            <button id="backToHomeBtn" class="choose-button">
+                חזור
             </button>
         </div>
     </div>
@@ -117,12 +119,17 @@
         // Event listener for the "Go to Dispenser" button
         goToDispenserBtn.addEventListener('click', () => {
             homePageSection.style.display = 'none'; // Hide home page
-            phraseDispenserSection.style.display = 'block'; // Show phrase dispenser
+            phraseDispenserSection.style.display = 'flex'; // Show phrase dispenser
             displayRandomPhrase(); // Load the first phrase immediately
         });
 
         // Add an event listener to the "Choose Phrase" button (inside phrase dispenser)
         choosePhraseBtn.addEventListener('click', displayRandomPhrase);
+
+        backToHomeBtn.addEventListener('click', () => {
+            homePageSection.style.display = 'flex'; // Show home page
+            phraseDispenserSection.style.display = 'none'; // Hide phrase dispenser
+        });
 
         // Initial setup: Show home page, hide phrase dispenser
         document.addEventListener('DOMContentLoaded', () => {
@@ -132,4 +139,5 @@
         });
     </script>
 </body>
+
 </html>

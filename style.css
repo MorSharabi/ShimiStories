@@ -4,7 +4,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
     background-color: #e0f2fe; /* Light sky blue background */
     margin: 0;
     padding: 20px; /* Add some padding for smaller screens */
@@ -16,9 +16,8 @@ body {
     border-radius: 1.5rem; /* More rounded corners */
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Deeper, softer shadow */
     text-align: center;
-    max-width: 90%; /* Responsive max-width */
-    width: 550px; /* Slightly wider for larger screens */
     border: 1px solid #bfdbfe; /* Subtle light blue border */
+    height: 100%;
 }
 h1 {
     color: #1e3a8a; /* Darker blue for the heading */
@@ -75,7 +74,7 @@ h1 {
     /* Animation will be toggled by JavaScript */
 }
 .image-loader.spinning {
-    animation: spin 1s linear infinite; /* Apply spin animation only when 'spinning' class is present */
+    animation: spin 1.5s linear infinite; /* Apply spin animation only when 'spinning' class is present */
 }
 
 /* New: Styles for the flex container holding phrase and loader */
@@ -85,13 +84,14 @@ h1 {
     justify-content: center; /* Horizontally center content */
     margin-bottom: 20px; /* Add some space below the wrapper */
     min-height: 100px; /* Ensure enough height for content */
+    gap: 20px;
+    width: 100%;
 }
 
 .content-wrapper #phraseDisplay,
 .content-wrapper .image-loader {
     flex: 1; /* Each takes 50% of the available space */
-    width: 50%; /* Explicitly set width to 50% */
-    box-sizing: border-box; /* Include padding/border in width */
+    height: 100%;
 }
 
 /* New: Adjust phrase-display for flex context */
@@ -106,32 +106,47 @@ h1 {
     display: flex; /* Initially visible */
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem;
+    justify-content: space-between;
+    padding: 24px;
+    height: 100%;
+    /* NEW: Background image properties */
+    background-image: url('shimiGag.jpeg'); /* Replaced with your image path */
+    background-size: cover; /* Cover the entire section */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    min-height: 300px; /* Ensure enough height to see the background */
+    border-radius: 1.5rem; /* Match container border-radius */
+    overflow: hidden; /* Ensure image doesn't spill out of rounded corners */
+}
+
+
+
+.home-page-section h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1e3a8a; /* Dark blue */
+    line-height: 1.2;
+    padding-bottom: 8px;
+}
+.home-button-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 
 .home-content-row {
     display: flex;
     align-items: center;
-    justify-content: space-around; /* Distribute space around items */
     width: 100%;
     margin-bottom: 2rem;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 .home-content-row > div,
 .home-content-row > img {
-    flex: 1; /* Each takes equal space */
+    flex: 1;
     min-width: 250px; /* Ensure elements don't get too small */
     padding: 1rem;
     text-align: center;
-}
-
-.home-content-row h2 {
-    font-size: 2.5rem; /* Larger title for home page */
-    font-weight: 800;
-    color: #1e3a8a; /* Dark blue */
-    line-height: 1.2;
 }
 
 .home-page-image {
@@ -167,5 +182,10 @@ h1 {
 
 /* Hide the phrase dispenser section by default */
 .phrase-dispenser-section {
-    display: none;
+    display: none; /* Initially visible */
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px;
+    height: 100%;
 }
