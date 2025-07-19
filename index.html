@@ -3,44 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phrase Dispenser</title>
+    <title>סיפורי שימי</title>
     <!-- Tailwind CSS CDN for easy styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Link to the external stylesheet -->
     <link rel="stylesheet" href="style.css">
-
 
 </head>
 <body>
     <div class="container">
         <h1 class="text-3xl font-bold text-gray-800 mb-6">סיפורי שימי</h1>
-        <div id="phraseDisplay" class="phrase-display">
+            <div id="phraseDisplay" class="phrase-display">
+                <!-- Initial phrase or prompt will be loaded here by JavaScript -->
+            </div>
+            <img id="imageLoader" src="shimiThinking.png" alt="Loading Spinner" class="image-loader">
 
-        </div>
         <button id="choosePhraseBtn" class="choose-button">
-            תביא משפט!
+            !תביא סיפור
         </button>
     </div>
 
+    <!-- Import the phrases from a separate file -->
     <script src="phrases.js"></script>
     <script>
-
-
         // Get references to the HTML elements
         const choosePhraseBtn = document.getElementById('choosePhraseBtn');
         const phraseDisplay = document.getElementById('phraseDisplay');
+        // Removed phraseUrlDisplay reference as the element is no longer in HTML
+        const imageLoader = document.getElementById('imageLoader'); // Reference to the image loader
 
-        // Function to display a random phrase
+        // Array to keep track of indices of phrases that have already been displayed
+        let displayedPhraseIndices = [];
+
         function displayRandomPhrase() {
-            // Generate a random index based on the phrases array length
-            const randomIndex = Math.floor(Math.random() * phrases.length);
-            // Get the phrase at the random index
-            const randomPhrase = phrases[randomIndex];
-            // Update the text content of the phrase display area
-            phraseDisplay.textContent = randomPhrase;
+            // Hide phrase content
+            phraseDisplay.style.display = 'none';
+
+            // Add 'spinning' class to start animation
+            imageLoader.classList.add('spinning');
+
+            // Simulate loading time for 2 seconds
+            setTimeout(() => {
+                // Remove 'spinning' class to stop animation
+                imageLoader.classList.remove('spinning');
+
+                // Show phrase content
+                phraseDisplay.style.display = 'flex'; // Restore display for phrase
+
+                // If all phrases have been displayed, reset the array to start a new cycle
+                if (displayedPhraseIndices.length === phrases.length) {
+                    displayedPhraseIndices = []; // Reset the stack
+                    console.log("All phrases displayed. Resetting stack."); // Optional: log to console
+                }
+
+                let randomIndex;
+                let randomPhraseObject;
+                let isDuplicate;
+
+                // Loop until a unique phrase (index not yet displayed) is found
+                do {
+                    randomIndex = Math.floor(Math.random() * phrases.length);
+                    randomPhraseObject = phrases[randomIndex];
+                    isDuplicate = displayedPhraseIndices.includes(randomIndex);
+                } while (isDuplicate);
+
+                // Add the chosen unique index to the list of displayed phrases
+                displayedPhraseIndices.push(randomIndex);
+
+                // Clear previous content
+                phraseDisplay.innerHTML = '';
+
+                // Check if the phrase object has a URL
+                if (randomPhraseObject.url) {
+                    // Create a clickable link for the phrase/title
+                    const phraseLink = document.createElement('a');
+                    phraseLink.href = randomPhraseObject.url;
+                    phraseLink.textContent = randomPhraseObject.phrase;
+                    phraseLink.target = "_blank"; // Open link in a new tab
+                    phraseLink.classList.add('phrase-link'); // Add a class for styling if needed
+                    phraseDisplay.appendChild(phraseLink);
+                } else {
+                    // If no URL, just display the phrase as text
+                    phraseDisplay.textContent = randomPhraseObject.phrase;
+                }
+
+            }, 2000); // 2000 milliseconds = 2 seconds
         }
 
         // Add an event listener to the button
         choosePhraseBtn.addEventListener('click', displayRandomPhrase);
+
+        // Display an initial phrase when the page loads (after a short delay for consistency)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initially hide phrase, start loader animation
+            phraseDisplay.style.display = 'none';
+            // Removed phraseUrlDisplay.style.display as the element is no longer in HTML
+            imageLoader.classList.add('spinning'); // Start spinning immediately on load
+
+            setTimeout(displayRandomPhrase, 500); // Short delay before showing first phrase
+        });
     </script>
 </body>
 </html>
