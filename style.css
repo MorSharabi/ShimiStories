@@ -84,8 +84,8 @@ h1 {
 }
 /* Style for the image loader */
 .image-loader {
-    width: 100px; /* Adjust size as needed */
-    height: 100px;
+    width: 200px; /* Adjust size as needed */
+    height: 180px;
     display: block; /* Always visible */
     margin: 20px auto; /* Center the image */
     /* Animation will be toggled by JavaScript */
@@ -93,17 +93,4 @@ h1 {
 .image-loader.spinning {
     animation: spin 1s linear infinite; /* Apply spin animation only when 'spinning' class is present */
 }
-.content-wrapper {
-    display: flex;
-    align-items: center; /* Vertically align items in the center */
-    justify-content: center; /* Horizontally center content */
-    margin-bottom: 20px; /* Add some space below the wrapper */
-    min-height: 100px; /* Ensure enough height for content */
-}
 
-.content-wrapper #phraseDisplay,
-.content-wrapper .image-loader {
-    flex: 1; /* Each takes 50% of the available space */
-    width: 50%; /* Explicitly set width to 50% */
-    box-sizing: border-box; /* Include padding/border in width */
-}
