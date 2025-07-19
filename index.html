@@ -6,37 +6,51 @@
     <title>Phrase Dispenser</title>
     <!-- Tailwind CSS CDN for easy styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Link to the external stylesheet -->
     <link rel="stylesheet" href="style.css">
-
-
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">סיפורי שימי</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">Phrase Dispenser</h1>
         <div id="phraseDisplay" class="phrase-display">
-
+            Click the button to get a phrase!
+        </div>
+        <div id="phraseUrlDisplay" class="url-display">
+            <!-- URL will be displayed here -->
         </div>
         <button id="choosePhraseBtn" class="choose-button">
-            תביא משפט!
+            Choose Phrase
         </button>
     </div>
 
+    <!-- Import the phrases from a separate file -->
     <script src="phrases.js"></script>
     <script>
-
-
         // Get references to the HTML elements
         const choosePhraseBtn = document.getElementById('choosePhraseBtn');
         const phraseDisplay = document.getElementById('phraseDisplay');
+        const phraseUrlDisplay = document.getElementById('phraseUrlDisplay'); // New element for URL
 
-        // Function to display a random phrase
+        // Function to display a random phrase and its URL
         function displayRandomPhrase() {
             // Generate a random index based on the phrases array length
             const randomIndex = Math.floor(Math.random() * phrases.length);
-            // Get the phrase at the random index
-            const randomPhrase = phrases[randomIndex];
-            // Update the text content of the phrase display area
-            phraseDisplay.textContent = randomPhrase;
+            // Get the phrase object at the random index
+            const randomPhraseObject = phrases[randomIndex];
+
+            // Create a clickable link for the phrase/title
+            const phraseLink = document.createElement('a');
+            phraseLink.href = randomPhraseObject.url;
+            phraseLink.textContent = randomPhraseObject.phrase;
+            phraseLink.target = "_blank"; // Open link in a new tab
+            phraseLink.classList.add('phrase-link'); // Add a class for styling if needed
+
+            // Clear previous content and append the new link
+            phraseDisplay.innerHTML = ''; // Clear existing content
+            phraseDisplay.appendChild(phraseLink);
+
+            // Display the URL below the phrase
+            phraseUrlDisplay.innerHTML = `<a href="${randomPhraseObject.url}" target="_blank" class="text-blue-600 hover:underline text-sm mt-2 block">${randomPhraseObject.url}</a>`;
         }
 
         // Add an event listener to the button

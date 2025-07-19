@@ -62,3 +62,18 @@ h1 {
     transform: translateY(0); /* Press effect on click */
     box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); /* Smaller shadow on active */
 }
+.url-display {
+    margin-top: 1rem; /* Space above the URL */
+    font-size: 0.9rem;
+    color: #4a5568; /* Slightly darker gray for URL */
+    word-break: break-all; /* Ensures long URLs wrap */
+}
+.phrase-link {
+    text-decoration: none; /* Remove underline by default */
+    color: #1e3a8a; /* Keep the dark blue color for the link */
+    transition: color 0.2s ease;
+}
+.phrase-link:hover {
+    color: #2563eb; /* Slightly lighter blue on hover */
+    text-decoration: underline; /* Underline on hover */
+}
