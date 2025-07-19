@@ -62,35 +62,110 @@ h1 {
     transform: translateY(0); /* Press effect on click */
     box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); /* Smaller shadow on active */
 }
-.url-display {
-    margin-top: 1rem; /* Space above the URL */
-    font-size: 0.9rem;
-    color: #4a5568; /* Slightly darker gray for URL */
-    word-break: break-all; /* Ensures long URLs wrap */
-}
-.phrase-link {
-    text-decoration: none; /* Remove underline by default */
-    color: #1e3a8a; /* Keep the dark blue color for the link */
-    transition: color 0.2s ease;
-}
-.phrase-link:hover {
-    color: #2563eb; /* Slightly lighter blue on hover */
-    text-decoration: underline; /* Underline on hover */
-}
-  /* CSS for the spinning loader */
-  @keyframes spin {
+
+/* New: CSS for the spinning loader */
+@keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-/* Style for the image loader */
 .image-loader {
-    width: 200px; /* Adjust size as needed */
-    height: 180px;
+    width: 250px; /* Adjust size as needed */
+    height: 250px;
     display: block; /* Always visible */
-    margin: 20px auto; /* Center the image */
     /* Animation will be toggled by JavaScript */
 }
 .image-loader.spinning {
     animation: spin 1s linear infinite; /* Apply spin animation only when 'spinning' class is present */
 }
 
+/* New: Styles for the flex container holding phrase and loader */
+.content-wrapper {
+    display: flex;
+    align-items: center; /* Vertically align items in the center */
+    justify-content: center; /* Horizontally center content */
+    margin-bottom: 20px; /* Add some space below the wrapper */
+    min-height: 100px; /* Ensure enough height for content */
+}
+
+.content-wrapper #phraseDisplay,
+.content-wrapper .image-loader {
+    flex: 1; /* Each takes 50% of the available space */
+    width: 50%; /* Explicitly set width to 50% */
+    box-sizing: border-box; /* Include padding/border in width */
+}
+
+/* New: Adjust phrase-display for flex context */
+.phrase-display {
+    /* Keep existing styles like font-size, color, padding, border-radius */
+    /* Remove margin-bottom if it causes issues with flex layout */
+    margin-bottom: 0; /* Remove margin-bottom from phrase-display as it's now in a flex container */
+}
+
+/* New: Styles for the Home Page */
+.home-page-section {
+    display: flex; /* Initially visible */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.home-content-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around; /* Distribute space around items */
+    width: 100%;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.home-content-row > div,
+.home-content-row > img {
+    flex: 1; /* Each takes equal space */
+    min-width: 250px; /* Ensure elements don't get too small */
+    padding: 1rem;
+    text-align: center;
+}
+
+.home-content-row h2 {
+    font-size: 2.5rem; /* Larger title for home page */
+    font-weight: 800;
+    color: #1e3a8a; /* Dark blue */
+    line-height: 1.2;
+}
+
+.home-page-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.home-button {
+    background-image: linear-gradient(to right, #facc15, #eab308); /* Yellow gradient */
+    color: #1e3a8a; /* Dark blue text */
+    padding: 1.25rem 3rem;
+    border-radius: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(250, 204, 21, 0.4);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.home-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(250, 204, 21, 0.6);
+    background-image: linear-gradient(to right, #eab308, #d97706);
+}
+.home-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(250, 204, 21, 0.3);
+}
+
+/* Hide the phrase dispenser section by default */
+.phrase-dispenser-section {
+    display: none;
+}

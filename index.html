@@ -8,33 +8,57 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Link to the external stylesheet -->
     <link rel="stylesheet" href="style.css">
-
+    <!-- All custom styles have been moved to style.css -->
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">סיפורי שימי</h1>
-            <div id="phraseDisplay" class="phrase-display">
-                <!-- Initial phrase or prompt will be loaded here by JavaScript -->
+        <!-- Home Page Section -->
+        <div id="homePageSection" class="home-page-section">
+            <div class="home-content-row">
+                <div>
+                    <h2>ברוכים הבאים לסיפורי שימי!</h2>
+                </div>
+                <img src="https://placehold.co/300x200/facc15/1e3a8a?text=Shimi+Stories" alt="Home Page Image" class="home-page-image">
             </div>
-            <img id="imageLoader" src="shimiThinking.png" alt="Loading Spinner" class="image-loader">
+            <button id="goToDispenserBtn" class="home-button">
+                התחל סיפורים!
+            </button>
+        </div>
 
-        <button id="choosePhraseBtn" class="choose-button">
-            !תביא סיפור
-        </button>
+        <!-- Phrase Dispenser Section (Initially Hidden) -->
+        <div id="phraseDispenserSection" class="phrase-dispenser-section">
+
+            <div class="content-wrapper">
+                <div id="phraseDisplay" class="phrase-display">
+                    <!-- Initial phrase or prompt will be loaded here by JavaScript -->
+                </div>
+                <!-- Image loader element -->
+                <img id="imageLoader" src="your-image-name.gif" alt="Loading Spinner" class="image-loader">
+                <!-- IMPORTANT: Replace "your-image-name.gif" with the actual filename of your image -->
+            </div>
+
+            <button id="choosePhraseBtn" class="choose-button">
+                !תביא סיפור
+            </button>
+        </div>
     </div>
 
     <!-- Import the phrases from a separate file -->
     <script src="phrases.js"></script>
     <script>
         // Get references to the HTML elements
+        const homePageSection = document.getElementById('homePageSection');
+        const phraseDispenserSection = document.getElementById('phraseDispenserSection');
+        const goToDispenserBtn = document.getElementById('goToDispenserBtn');
+
         const choosePhraseBtn = document.getElementById('choosePhraseBtn');
         const phraseDisplay = document.getElementById('phraseDisplay');
-        // Removed phraseUrlDisplay reference as the element is no longer in HTML
         const imageLoader = document.getElementById('imageLoader'); // Reference to the image loader
 
         // Array to keep track of indices of phrases that have already been displayed
         let displayedPhraseIndices = [];
 
+        // Function to display a random phrase and its URL
         function displayRandomPhrase() {
             // Hide phrase content
             phraseDisplay.style.display = 'none';
@@ -90,17 +114,21 @@
             }, 2000); // 2000 milliseconds = 2 seconds
         }
 
-        // Add an event listener to the button
+        // Event listener for the "Go to Dispenser" button
+        goToDispenserBtn.addEventListener('click', () => {
+            homePageSection.style.display = 'none'; // Hide home page
+            phraseDispenserSection.style.display = 'block'; // Show phrase dispenser
+            displayRandomPhrase(); // Load the first phrase immediately
+        });
+
+        // Add an event listener to the "Choose Phrase" button (inside phrase dispenser)
         choosePhraseBtn.addEventListener('click', displayRandomPhrase);
 
-        // Display an initial phrase when the page loads (after a short delay for consistency)
+        // Initial setup: Show home page, hide phrase dispenser
         document.addEventListener('DOMContentLoaded', () => {
-            // Initially hide phrase, start loader animation
-            phraseDisplay.style.display = 'none';
-            // Removed phraseUrlDisplay.style.display as the element is no longer in HTML
-            imageLoader.classList.add('spinning'); // Start spinning immediately on load
-
-            setTimeout(displayRandomPhrase, 500); // Short delay before showing first phrase
+            homePageSection.style.display = 'flex'; // Ensure home page is visible
+            phraseDispenserSection.style.display = 'none'; // Hide phrase dispenser
+            // No initial phrase display on load, as we are on the home page
         });
     </script>
 </body>
