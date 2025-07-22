@@ -1,107 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>סיפורי שימי</title>
-    <!-- Tailwind CSS CDN for easy styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Link to the external stylesheet -->
-    <link rel="stylesheet" href="style.css">
 
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>סיפורי שימי</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">סיפורי שימי</h1>
-            <div id="phraseDisplay" class="phrase-display">
-                <!-- Initial phrase or prompt will be loaded here by JavaScript -->
+        <!-- Home Page Section -->
+        <div id="homePageSection" class="home-page-section">
+            <div class="home-page-section-title">
+                <h2>!ברוכים הבאים לסיפורי שימי</h2>
             </div>
-            <img id="imageLoader" src="shimiThinking.png" alt="Loading Spinner" class="image-loader">
+            <div class="home-button-container">
+                <button id="goToDispenserBtn" class="home-button">לסיפורים</button>
+            </div>
+        </div>
 
-        <button id="choosePhraseBtn" class="choose-button">
-            !תביא סיפור
-        </button>
+        <!-- Phrase Dispenser Section (Initially Hidden) -->
+        <div id="phraseDispenserSection" class="phrase-dispenser-section">
+            <div class="content-wrapper">
+                <div id="phraseDisplay" class="phrase-display"></div>
+                <div>
+                    <img id="imageLoader" src="shimiThinkingSmall.jpeg" alt="Loading Spinner" class="image-loader" />
+                </div>
+            </div>
+            <div class="home-button-container">
+                <button id="choosePhraseBtn" class="choose-button">!תביא סיפור</button>
+                <button id="backToHomeBtn" class="choose-button">ראשי</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Import the phrases from a separate file -->
-    <script src="phrases.js"></script>
     <script>
-        // Get references to the HTML elements
-        const choosePhraseBtn = document.getElementById('choosePhraseBtn');
-        const phraseDisplay = document.getElementById('phraseDisplay');
-        // Removed phraseUrlDisplay reference as the element is no longer in HTML
-        const imageLoader = document.getElementById('imageLoader'); // Reference to the image loader
+        const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRwCxbj6L8iXZPtbiBe2Vq41d2shBjpis2CjsnYFYrD7BsaMJPuiTQ67FW1QlEpFeqQVJLhy3tkBrAb/pub?gid=0&single=true&output=csv';
 
-        // Array to keep track of indices of phrases that have already been displayed
+        let phrases = [];
         let displayedPhraseIndices = [];
 
-        function displayRandomPhrase() {
-            // Hide phrase content
-            phraseDisplay.style.display = 'none';
+        const homePageSection = document.getElementById('homePageSection');
+        const phraseDispenserSection = document.getElementById('phraseDispenserSection');
+        const goToDispenserBtn = document.getElementById('goToDispenserBtn');
+        const backToHomeBtn = document.getElementById('backToHomeBtn');
+        const choosePhraseBtn = document.getElementById('choosePhraseBtn');
+        const phraseDisplay = document.getElementById('phraseDisplay');
+        const imageLoader = document.getElementById('imageLoader');
 
-            // Add 'spinning' class to start animation
+        function parseCSV(csv, delimiter = ',') {
+            const lines = csv.split('\n').filter(line => line.trim() !== '');
+            const headers = lines[0].split(delimiter).map(h => h.trim());
+            return lines.slice(1).map(line => {
+                const values = line.split(delimiter).map(v => v.trim());
+                return headers.reduce((obj, key, i) => {
+                    obj[key] = values[i] || '';
+                    return obj;
+                }, {});
+            });
+        }
+
+        async function fetchPhrases() {
+            try {
+                phraseDisplay.style.display = 'none';
+                imageLoader.classList.add('spinning');
+
+                const response = await fetch(GOOGLE_SHEET_CSV_URL);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+                const csv = await response.text();
+                const parsed = parseCSV(csv);
+
+                phrases = parsed.filter(row => row.phrase && row.phrase.trim() !== '');
+
+                console.log("Phrases loaded from CSV:", phrases);
+
+                imageLoader.classList.remove('spinning');
+                phraseDisplay.style.display = 'flex';
+
+                if (phrases.length > 0) {
+                    displayRandomPhrase();
+                } else {
+                    phraseDisplay.textContent = "No phrases found in Google Sheet.";
+                }
+            } catch (err) {
+                console.error("Error fetching phrases:", err);
+                phraseDisplay.textContent = "Failed to load phrases. Check console for details.";
+                imageLoader.classList.remove('spinning');
+                phraseDisplay.style.display = 'flex';
+            }
+        }
+
+        function displayRandomPhrase() {
+            phraseDisplay.style.display = 'none';
             imageLoader.classList.add('spinning');
 
-            // Simulate loading time for 2 seconds
             setTimeout(() => {
-                // Remove 'spinning' class to stop animation
                 imageLoader.classList.remove('spinning');
+                phraseDisplay.style.display = 'flex';
 
-                // Show phrase content
-                phraseDisplay.style.display = 'flex'; // Restore display for phrase
-
-                // If all phrases have been displayed, reset the array to start a new cycle
                 if (displayedPhraseIndices.length === phrases.length) {
-                    displayedPhraseIndices = []; // Reset the stack
-                    console.log("All phrases displayed. Resetting stack."); // Optional: log to console
+                    displayedPhraseIndices = [];
+                    console.log("All phrases displayed. Resetting stack.");
                 }
 
-                let randomIndex;
-                let randomPhraseObject;
-                let isDuplicate;
+                if (phrases.length === 0) {
+                    phraseDisplay.textContent = "No phrases available.";
+                    return;
+                }
 
-                // Loop until a unique phrase (index not yet displayed) is found
+                let randomIndex, randomPhraseObject, isDuplicate;
                 do {
                     randomIndex = Math.floor(Math.random() * phrases.length);
                     randomPhraseObject = phrases[randomIndex];
                     isDuplicate = displayedPhraseIndices.includes(randomIndex);
                 } while (isDuplicate);
 
-                // Add the chosen unique index to the list of displayed phrases
                 displayedPhraseIndices.push(randomIndex);
-
-                // Clear previous content
                 phraseDisplay.innerHTML = '';
 
-                // Check if the phrase object has a URL
                 if (randomPhraseObject.url) {
-                    // Create a clickable link for the phrase/title
-                    const phraseLink = document.createElement('a');
-                    phraseLink.href = randomPhraseObject.url;
-                    phraseLink.textContent = randomPhraseObject.phrase;
-                    phraseLink.target = "_blank"; // Open link in a new tab
-                    phraseLink.classList.add('phrase-link'); // Add a class for styling if needed
-                    phraseDisplay.appendChild(phraseLink);
+                    const a = document.createElement('a');
+                    a.href = randomPhraseObject.url;
+                    a.textContent = randomPhraseObject.phrase;
+                    a.target = "_blank";
+                    a.classList.add('phrase-link');
+                    phraseDisplay.appendChild(a);
                 } else {
-                    // If no URL, just display the phrase as text
                     phraseDisplay.textContent = randomPhraseObject.phrase;
                 }
-
-            }, 2000); // 2000 milliseconds = 2 seconds
+            }, 2000);
         }
 
-        // Add an event listener to the button
+        goToDispenserBtn.addEventListener('click', () => {
+            homePageSection.style.display = 'none';
+            phraseDispenserSection.style.display = 'flex';
+            fetchPhrases();
+        });
+
         choosePhraseBtn.addEventListener('click', displayRandomPhrase);
 
-        // Display an initial phrase when the page loads (after a short delay for consistency)
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initially hide phrase, start loader animation
-            phraseDisplay.style.display = 'none';
-            // Removed phraseUrlDisplay.style.display as the element is no longer in HTML
-            imageLoader.classList.add('spinning'); // Start spinning immediately on load
+        backToHomeBtn.addEventListener('click', () => {
+            homePageSection.style.display = 'flex';
+            phraseDispenserSection.style.display = 'none';
+        });
 
-            setTimeout(displayRandomPhrase, 500); // Short delay before showing first phrase
+        document.addEventListener('DOMContentLoaded', () => {
+            homePageSection.style.display = 'flex';
+            phraseDispenserSection.style.display = 'none';
         });
     </script>
 </body>
+
 </html>
