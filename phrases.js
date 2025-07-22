@@ -32,14 +32,56 @@ const phrases = [
     {
         phrase: "שמריז מזמין סטייק ב400 שקל",
     },
-
+    {
+        phrase: "עושים קנוניה על אלון בקלפים",
+    },
+    {
+        phrase: "הסיפור על עידן שריסט",
+    },
+    {
+        phrase: "שימי עף מההליכון (סיפור פקד)",
+    },
+    {
+        phrase: "המכות בבארי",
+    },
+    {
+        phrase: "זמן פוקי",
+    },
+    {
+        phrase: "הפיחנגה הקטלנית",
+    },
+    {
+        phrase: "סטרטאפים",
+    },
+    {
+        phrase: "שימריז מפרשן בטיול חפשש",
+        url: "https://photos.google.com/share/AF1QipNWslZn_pWNc9NrJmPpmvMPe8Ad_A_XGPnsPDxxooZXbmUaFw5w3AC0vcbnXgfLNw/photo/AF1QipMbGQ3U385tGl7zGkri9C2wHOzxJIGHyvfv_XkJ"
+    },
+    {
+        phrase: "שימריז בפורים חברים",
+        url: "https://photos.google.com/share/AF1QipNWslZn_pWNc9NrJmPpmvMPe8Ad_A_XGPnsPDxxooZXbmUaFw5w3AC0vcbnXgfLNw/photo/AF1QipPrOWf4LYrQGr_AN-GJ3qkTFty_i56WoQCgdAw"
+    },
+    {
+        phrase: "קטעים מפורים חברים",
+    },
+    {
+        phrase: "הצלקת בגבה",
+    },
+    {
+        phrase: "הטלפון של הדילר",
+    },
+    {
+        phrase: "אופק נתן",
+    },
+    {
+        phrase: "סאבוג'ה",
+        url: "https://photos.google.com/share/AF1QipNWslZn_pWNc9NrJmPpmvMPe8Ad_A_XGPnsPDxxooZXbmUaFw5w3AC0vcbnXgfLNw/photo/AF1QipNvxITyPtulfghRx06PViLPsWvlTGob3E5XrYfD"
+    },
+    {
+        phrase: "שמנים - עידו",
+        url: "https://drive.google.com/drive/folders/1G4BYRB7A-iHmVeLElbpVJRblX1iT1Ism"
+    },
+    {
+        phrase: "קרניבל הובלות - עידו",
+    },
 ];
-
-
-
-
-
-
-
-
-

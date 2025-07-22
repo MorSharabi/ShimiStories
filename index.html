@@ -45,20 +45,76 @@
         </div>
     </div>
 
-    <!-- Import the phrases from a separate file -->
-    <script src="phrases.js"></script>
     <script>
+        // *** This is the correct Google Visualization API endpoint for your sheet ***
+        // Sheet ID: 2PACX-1vRwCxbj6L8iXZPtbiBe2Vq41d2shBjpis2CjsnYFYrD7BsaMJPuiTQ67FW1QlEpFeqQVJLhy3tkBrAb
+        // GID: 0
+        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/2PACX-1vRwCxbj6L8iXZPtbiBe2Vq41d2shBjpis2CjsnYFYrD7BsaMJPuiTQ67FW1QlEpFeqQVJLhy3tkBrAb/gviz/tq?tqx=out:json&tq&gid=0';
+
+        let phrases = []; // This will now be populated from the Google Sheet
+        let displayedPhraseIndices = []; // Array to keep track of indices of phrases that have already been displayed
+
+        // Function to fetch phrases from Google Sheet
+        async function fetchPhrases() {
+            try {
+                // Show loader while fetching
+                phraseDisplay.style.display = 'none';
+                imageLoader.classList.add('spinning');
+
+                const response = await fetch(GOOGLE_SHEET_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const text = await response.text(); // Get as text first
+                // Google's JSON output from gviz/tq endpoint has a prefix like "/*O_o*/\ngoogle.visualization.Query.setResponse({"
+                // We need to strip that to get pure JSON
+                const jsonString = text.replace(/^.*\n/, '').replace(/\);$/, ''); // Remove prefix and suffix
+
+                const data = JSON.parse(jsonString);
+
+                // Access the rows and columns based on the typical Google Visualization JSON structure
+                const cols = data.table.cols;
+                const rows = data.table.rows;
+
+                phrases = rows.map(row => {
+                    const phraseIndex = cols.findIndex(col => col.label === 'phrase');
+                    const urlIndex = cols.findIndex(col => col.label === 'url');
+
+                    return {
+                        phrase: row.c[phraseIndex] ? row.c[phraseIndex].v : '',
+                        url: row.c[urlIndex] ? row.c[urlIndex].v : '' // Handle cases where URL might be empty
+                    };
+                }).filter(item => item.phrase.trim() !== ''); // Filter out empty phrases
+
+                console.log("Phrases loaded from Google Sheet:", phrases);
+
+                // Once phrases are loaded, hide loader and display the first one
+                imageLoader.classList.remove('spinning');
+                phraseDisplay.style.display = 'flex';
+
+                if (phrases.length > 0) {
+                    displayRandomPhrase();
+                } else {
+                    phraseDisplay.textContent = "No phrases found in Google Sheet.";
+                }
+
+            } catch (error) {
+                console.error("Error fetching phrases:", error);
+                phraseDisplay.textContent = "Failed to load phrases. Check console for details.";
+                imageLoader.classList.remove('spinning'); // Stop spinning on error
+                phraseDisplay.style.display = 'flex';
+            }
+        }
+
         // Get references to the HTML elements
         const homePageSection = document.getElementById('homePageSection');
         const phraseDispenserSection = document.getElementById('phraseDispenserSection');
         const goToDispenserBtn = document.getElementById('goToDispenserBtn');
+        const backToHomeBtn = document.getElementById('backToHomeBtn'); // Reference to the new back button
 
         const choosePhraseBtn = document.getElementById('choosePhraseBtn');
         const phraseDisplay = document.getElementById('phraseDisplay');
         const imageLoader = document.getElementById('imageLoader'); // Reference to the image loader
-
-        // Array to keep track of indices of phrases that have already been displayed
-        let displayedPhraseIndices = [];
 
         // Function to display a random phrase and its URL
         function displayRandomPhrase() {
@@ -87,6 +143,12 @@
                 let isDuplicate;
 
                 // Loop until a unique phrase (index not yet displayed) is found
+                // Ensure there are phrases to pick from
+                if (phrases.length === 0) {
+                    phraseDisplay.textContent = "No phrases available.";
+                    return;
+                }
+
                 do {
                     randomIndex = Math.floor(Math.random() * phrases.length);
                     randomPhraseObject = phrases[randomIndex];
@@ -100,7 +162,7 @@
                 phraseDisplay.innerHTML = '';
 
                 // Check if the phrase object has a URL
-                if (randomPhraseObject.url) {
+                if (randomPhraseObject.url && randomPhraseObject.url.trim() !== '') {
                     // Create a clickable link for the phrase/title
                     const phraseLink = document.createElement('a');
                     phraseLink.href = randomPhraseObject.url;
@@ -120,22 +182,24 @@
         goToDispenserBtn.addEventListener('click', () => {
             homePageSection.style.display = 'none'; // Hide home page
             phraseDispenserSection.style.display = 'flex'; // Show phrase dispenser
-            displayRandomPhrase(); // Load the first phrase immediately
+            // Instead of directly calling displayRandomPhrase, fetch phrases first
+            fetchPhrases(); // Call fetchPhrases to load data from Google Sheet
         });
 
         // Add an event listener to the "Choose Phrase" button (inside phrase dispenser)
         choosePhraseBtn.addEventListener('click', displayRandomPhrase);
 
+        // Event listener for the "Back to Home" button
         backToHomeBtn.addEventListener('click', () => {
             homePageSection.style.display = 'flex'; // Show home page
             phraseDispenserSection.style.display = 'none'; // Hide phrase dispenser
+            // displayedPhraseIndices is NOT reset here, preserving the story count.
         });
 
         // Initial setup: Show home page, hide phrase dispenser
         document.addEventListener('DOMContentLoaded', () => {
             homePageSection.style.display = 'flex'; // Ensure home page is visible
             phraseDispenserSection.style.display = 'none'; // Hide phrase dispenser
-            // No initial phrase display on load, as we are on the home page
         });
     </script>
 </body>
