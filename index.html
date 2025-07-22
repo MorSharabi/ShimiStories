@@ -2,14 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>סיפורי שימי</title>
-    <!-- Tailwind CSS CDN for easy styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Link to the external stylesheet -->
-    <link rel="stylesheet" href="style.css">
-    <!-- All custom styles have been moved to style.css -->
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
@@ -27,185 +24,134 @@
         <!-- Phrase Dispenser Section (Initially Hidden) -->
         <div id="phraseDispenserSection" class="phrase-dispenser-section">
             <div class="content-wrapper">
-                <div id="phraseDisplay" class="phrase-display">
-                    <!-- Initial phrase or prompt will be loaded here by JavaScript -->
-                </div>
-                <!-- Image loader element -->
+                <div id="phraseDisplay" class="phrase-display"></div>
                 <div>
-                    <img id="imageLoader" src="shimiThinkingSmall.jpeg" alt="Loading Spinner" class="image-loader">
+                    <img id="imageLoader" src="shimiThinkingSmall.jpeg" alt="Loading Spinner" class="image-loader" />
                 </div>
             </div>
-            <div class="home-button-container"> <!-- Reusing this class for button grouping -->
-                <button id="choosePhraseBtn" class="choose-button">
-                    !תביא סיפור
-                </button>
-                <button id="backToHomeBtn" class="choose-button">
-                    ראשי
-                </button>
+            <div class="home-button-container">
+                <button id="choosePhraseBtn" class="choose-button">!תביא סיפור</button>
+                <button id="backToHomeBtn" class="choose-button">ראשי</button>
             </div>
         </div>
+    </div>
 
-        <!DOCTYPE html>
-        <html lang="en">
+    <script>
+        const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRwCxbj6L8iXZPtbiBe2Vq41d2shBjpis2CjsnYFYrD7BsaMJPuiTQ67FW1QlEpFeqQVJLhy3tkBrAb/pub?gid=0&single=true&output=csv';
 
-        <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>סיפורי שימי</title>
-            <script src="https://cdn.tailwindcss.com"></script>
-            <link rel="stylesheet" href="style.css" />
-        </head>
+        let phrases = [];
+        let displayedPhraseIndices = [];
 
-        <body>
-            <div class="container">
-                <!-- Home Page Section -->
-                <div id="homePageSection" class="home-page-section">
-                    <div class="home-page-section-title">
-                        <h2>!ברוכים הבאים לסיפורי שימי</h2>
-                    </div>
-                    <div class="home-button-container">
-                        <button id="goToDispenserBtn" class="home-button">לסיפורים</button>
-                    </div>
-                </div>
+        const homePageSection = document.getElementById('homePageSection');
+        const phraseDispenserSection = document.getElementById('phraseDispenserSection');
+        const goToDispenserBtn = document.getElementById('goToDispenserBtn');
+        const backToHomeBtn = document.getElementById('backToHomeBtn');
+        const choosePhraseBtn = document.getElementById('choosePhraseBtn');
+        const phraseDisplay = document.getElementById('phraseDisplay');
+        const imageLoader = document.getElementById('imageLoader');
 
-                <!-- Phrase Dispenser Section (Initially Hidden) -->
-                <div id="phraseDispenserSection" class="phrase-dispenser-section">
-                    <div class="content-wrapper">
-                        <div id="phraseDisplay" class="phrase-display"></div>
-                        <div>
-                            <img id="imageLoader" src="shimiThinkingSmall.jpeg" alt="Loading Spinner"
-                                class="image-loader" />
-                        </div>
-                    </div>
-                    <div class="home-button-container">
-                        <button id="choosePhraseBtn" class="choose-button">!תביא סיפור</button>
-                        <button id="backToHomeBtn" class="choose-button">ראשי</button>
-                    </div>
-                </div>
+        function parseCSV(csv, delimiter = ',') {
+            const lines = csv.split('\n').filter(line => line.trim() !== '');
+            const headers = lines[0].split(delimiter).map(h => h.trim());
+            return lines.slice(1).map(line => {
+                const values = line.split(delimiter).map(v => v.trim());
+                return headers.reduce((obj, key, i) => {
+                    obj[key] = values[i] || '';
+                    return obj;
+                }, {});
+            });
+        }
 
-                <script>
-                    const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRwCxbj6L8iXZPtbiBe2Vq41d2shBjpis2CjsnYFYrD7BsaMJPuiTQ67FW1QlEpFeqQVJLhy3tkBrAb/pub?gid=0&single=true&output=csv';
+        async function fetchPhrases() {
+            try {
+                phraseDisplay.style.display = 'none';
+                imageLoader.classList.add('spinning');
 
-                    let phrases = [];
-                    let displayedPhraseIndices = [];
+                const response = await fetch(GOOGLE_SHEET_CSV_URL);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-                    const homePageSection = document.getElementById('homePageSection');
-                    const phraseDispenserSection = document.getElementById('phraseDispenserSection');
-                    const goToDispenserBtn = document.getElementById('goToDispenserBtn');
-                    const backToHomeBtn = document.getElementById('backToHomeBtn');
-                    const choosePhraseBtn = document.getElementById('choosePhraseBtn');
-                    const phraseDisplay = document.getElementById('phraseDisplay');
-                    const imageLoader = document.getElementById('imageLoader');
+                const csv = await response.text();
+                const parsed = parseCSV(csv);
 
-                    function parseCSV(csv, delimiter = ',') {
-                        const lines = csv.split('\n').filter(line => line.trim() !== '');
-                        const headers = lines[0].split(delimiter).map(h => h.trim());
-                        return lines.slice(1).map(line => {
-                            const values = line.split(delimiter).map(v => v.trim());
-                            return headers.reduce((obj, key, i) => {
-                                obj[key] = values[i] || '';
-                                return obj;
-                            }, {});
-                        });
-                    }
+                phrases = parsed.filter(row => row.phrase && row.phrase.trim() !== '');
 
-                    async function fetchPhrases() {
-                        try {
-                            phraseDisplay.style.display = 'none';
-                            imageLoader.classList.add('spinning');
+                console.log("Phrases loaded from CSV:", phrases);
 
-                            const response = await fetch(GOOGLE_SHEET_CSV_URL);
-                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                imageLoader.classList.remove('spinning');
+                phraseDisplay.style.display = 'flex';
 
-                            const csv = await response.text();
-                            const parsed = parseCSV(csv);
+                if (phrases.length > 0) {
+                    displayRandomPhrase();
+                } else {
+                    phraseDisplay.textContent = "No phrases found in Google Sheet.";
+                }
+            } catch (err) {
+                console.error("Error fetching phrases:", err);
+                phraseDisplay.textContent = "Failed to load phrases. Check console for details.";
+                imageLoader.classList.remove('spinning');
+                phraseDisplay.style.display = 'flex';
+            }
+        }
 
-                            phrases = parsed.filter(row => row.phrase && row.phrase.trim() !== '');
+        function displayRandomPhrase() {
+            phraseDisplay.style.display = 'none';
+            imageLoader.classList.add('spinning');
 
-                            console.log("Phrases loaded from CSV:", phrases);
+            setTimeout(() => {
+                imageLoader.classList.remove('spinning');
+                phraseDisplay.style.display = 'flex';
 
-                            imageLoader.classList.remove('spinning');
-                            phraseDisplay.style.display = 'flex';
+                if (displayedPhraseIndices.length === phrases.length) {
+                    displayedPhraseIndices = [];
+                    console.log("All phrases displayed. Resetting stack.");
+                }
 
-                            if (phrases.length > 0) {
-                                displayRandomPhrase();
-                            } else {
-                                phraseDisplay.textContent = "No phrases found in Google Sheet.";
-                            }
-                        } catch (err) {
-                            console.error("Error fetching phrases:", err);
-                            phraseDisplay.textContent = "Failed to load phrases. Check console for details.";
-                            imageLoader.classList.remove('spinning');
-                            phraseDisplay.style.display = 'flex';
-                        }
-                    }
+                if (phrases.length === 0) {
+                    phraseDisplay.textContent = "No phrases available.";
+                    return;
+                }
 
-                    function displayRandomPhrase() {
-                        phraseDisplay.style.display = 'none';
-                        imageLoader.classList.add('spinning');
+                let randomIndex, randomPhraseObject, isDuplicate;
+                do {
+                    randomIndex = Math.floor(Math.random() * phrases.length);
+                    randomPhraseObject = phrases[randomIndex];
+                    isDuplicate = displayedPhraseIndices.includes(randomIndex);
+                } while (isDuplicate);
 
-                        setTimeout(() => {
-                            imageLoader.classList.remove('spinning');
-                            phraseDisplay.style.display = 'flex';
+                displayedPhraseIndices.push(randomIndex);
+                phraseDisplay.innerHTML = '';
 
-                            if (displayedPhraseIndices.length === phrases.length) {
-                                displayedPhraseIndices = [];
-                                console.log("All phrases displayed. Resetting stack.");
-                            }
+                if (randomPhraseObject.url) {
+                    const a = document.createElement('a');
+                    a.href = randomPhraseObject.url;
+                    a.textContent = randomPhraseObject.phrase;
+                    a.target = "_blank";
+                    a.classList.add('phrase-link');
+                    phraseDisplay.appendChild(a);
+                } else {
+                    phraseDisplay.textContent = randomPhraseObject.phrase;
+                }
+            }, 2000);
+        }
 
-                            if (phrases.length === 0) {
-                                phraseDisplay.textContent = "No phrases available.";
-                                return;
-                            }
+        goToDispenserBtn.addEventListener('click', () => {
+            homePageSection.style.display = 'none';
+            phraseDispenserSection.style.display = 'flex';
+            fetchPhrases();
+        });
 
-                            let randomIndex;
-                            let randomPhraseObject;
-                            let isDuplicate;
+        choosePhraseBtn.addEventListener('click', displayRandomPhrase);
 
-                            do {
-                                randomIndex = Math.floor(Math.random() * phrases.length);
-                                randomPhraseObject = phrases[randomIndex];
-                                isDuplicate = displayedPhraseIndices.includes(randomIndex);
-                            } while (isDuplicate);
+        backToHomeBtn.addEventListener('click', () => {
+            homePageSection.style.display = 'flex';
+            phraseDispenserSection.style.display = 'none';
+        });
 
-                            displayedPhraseIndices.push(randomIndex);
-                            phraseDisplay.innerHTML = '';
-
-                            if (randomPhraseObject.url && randomPhraseObject.url.trim() !== '') {
-                                const phraseLink = document.createElement('a');
-                                phraseLink.href = randomPhraseObject.url;
-                                phraseLink.textContent = randomPhraseObject.phrase;
-                                phraseLink.target = "_blank";
-                                phraseLink.classList.add('phrase-link');
-                                phraseDisplay.appendChild(phraseLink);
-                            } else {
-                                phraseDisplay.textContent = randomPhraseObject.phrase;
-                            }
-                        }, 2000);
-                    }
-
-                    goToDispenserBtn.addEventListener('click', () => {
-                        homePageSection.style.display = 'none';
-                        phraseDispenserSection.style.display = 'flex';
-                        fetchPhrases();
-                    });
-
-                    choosePhraseBtn.addEventListener('click', displayRandomPhrase);
-
-                    backToHomeBtn.addEventListener('click', () => {
-                        homePageSection.style.display = 'flex';
-                        phraseDispenserSection.style.display = 'none';
-                    });
-
-                    document.addEventListener('DOMContentLoaded', () => {
-                        homePageSection.style.display = 'flex';
-                        phraseDispenserSection.style.display = 'none';
-                    });
-                </script>
-            </div>
-        </body>
-
-        </html>
+        document.addEventListener('DOMContentLoaded', () => {
+            homePageSection.style.display = 'flex';
+            phraseDispenserSection.style.display = 'none';
+        });
+    </script>
 </body>
 
 </html>
