@@ -18,6 +18,7 @@
             </div>
             <div class="home-button-container">
                 <button id="goToDispenserBtn" class="home-button">לסיפורים</button>
+                <button id="goToStoryListBtn" class="home-button">רשימת הסיפורים</button>
             </div>
         </div>
 
@@ -34,21 +35,40 @@
                 <button id="backToHomeBtn" class="choose-button">ראשי</button>
             </div>
         </div>
+
+        <!-- Story List Section (Initially Hidden) -->
+        <div id="storyListSection" class="phrase-dispenser-section" style="display: none;">
+            <div class="scrollable-list">
+                <ul id="storyList" class="story-list space-y-4 w-full max-w-xl mx-auto text-right"></ul>
+            </div>
+            <div class="home-button-container">
+                <button id="backToHomeFromListBtn" class="choose-button">ראשי</button>
+            </div>
+        </div>
     </div>
+
+    <!-- KEEP EVERYTHING AS IS ABOVE -->
 
     <script>
         const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRwCxbj6L8iXZPtbiBe2Vq41d2shBjpis2CjsnYFYrD7BsaMJPuiTQ67FW1QlEpFeqQVJLhy3tkBrAb/pub?gid=0&single=true&output=csv';
 
         let phrases = [];
-        let displayedPhraseIndices = [];
+        let currentPhraseIndex = 0;
 
         const homePageSection = document.getElementById('homePageSection');
         const phraseDispenserSection = document.getElementById('phraseDispenserSection');
+        const storyListSection = document.getElementById('storyListSection');
+
         const goToDispenserBtn = document.getElementById('goToDispenserBtn');
+        const goToStoryListBtn = document.getElementById('goToStoryListBtn');
+
         const backToHomeBtn = document.getElementById('backToHomeBtn');
+        const backToHomeFromListBtn = document.getElementById('backToHomeFromListBtn');
+
         const choosePhraseBtn = document.getElementById('choosePhraseBtn');
         const phraseDisplay = document.getElementById('phraseDisplay');
         const imageLoader = document.getElementById('imageLoader');
+        const storyList = document.getElementById('storyList');
 
         function parseCSV(csv, delimiter = ',') {
             const lines = csv.split('\n').filter(line => line.trim() !== '');
@@ -74,6 +94,7 @@
                 const parsed = parseCSV(csv);
 
                 phrases = parsed.filter(row => row.phrase && row.phrase.trim() !== '');
+                currentPhraseIndex = 0;
 
                 console.log("Phrases loaded from CSV:", phrases);
 
@@ -81,7 +102,7 @@
                 phraseDisplay.style.display = 'flex';
 
                 if (phrases.length > 0) {
-                    displayRandomPhrase();
+                    displayNextPhrase();
                 } else {
                     phraseDisplay.textContent = "No phrases found in Google Sheet.";
                 }
@@ -93,7 +114,7 @@
             }
         }
 
-        function displayRandomPhrase() {
+        function displayNextPhrase() {
             phraseDisplay.style.display = 'none';
             imageLoader.classList.add('spinning');
 
@@ -101,55 +122,89 @@
                 imageLoader.classList.remove('spinning');
                 phraseDisplay.style.display = 'flex';
 
-                if (displayedPhraseIndices.length === phrases.length) {
-                    displayedPhraseIndices = [];
-                    console.log("All phrases displayed. Resetting stack.");
-                }
-
                 if (phrases.length === 0) {
                     phraseDisplay.textContent = "No phrases available.";
                     return;
                 }
 
-                let randomIndex, randomPhraseObject, isDuplicate;
-                do {
-                    randomIndex = Math.floor(Math.random() * phrases.length);
-                    randomPhraseObject = phrases[randomIndex];
-                    isDuplicate = displayedPhraseIndices.includes(randomIndex);
-                } while (isDuplicate);
+                const phraseObj = phrases[currentPhraseIndex];
+                currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
 
-                displayedPhraseIndices.push(randomIndex);
                 phraseDisplay.innerHTML = '';
-
-                if (randomPhraseObject.url) {
+                if (phraseObj.url) {
                     const a = document.createElement('a');
-                    a.href = randomPhraseObject.url;
-                    a.textContent = randomPhraseObject.phrase;
+                    a.href = phraseObj.url;
+                    a.textContent = phraseObj.phrase;
                     a.target = "_blank";
                     a.classList.add('phrase-link');
                     phraseDisplay.appendChild(a);
                 } else {
-                    phraseDisplay.textContent = randomPhraseObject.phrase;
+                    phraseDisplay.textContent = phraseObj.phrase;
                 }
             }, 2000);
         }
 
+        function renderStoryList() {
+            storyList.innerHTML = '';
+
+            if (phrases.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = 'לא נמצאו סיפורים.';
+                storyList.appendChild(li);
+                return;
+            }
+
+            phrases.forEach(({ phrase, url }) => {
+                const li = document.createElement('li');
+                if (url) {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.textContent = phrase;
+                    a.target = '_blank';
+                    a.classList.add('text-blue-600', 'hover:underline', 'block');
+                    li.appendChild(a);
+                } else {
+                    li.textContent = phrase;
+                }
+                storyList.appendChild(li);
+            });
+        }
+
         goToDispenserBtn.addEventListener('click', () => {
             homePageSection.style.display = 'none';
+            storyListSection.style.display = 'none';
             phraseDispenserSection.style.display = 'flex';
             fetchPhrases();
         });
 
-        choosePhraseBtn.addEventListener('click', displayRandomPhrase);
+        choosePhraseBtn.addEventListener('click', displayNextPhrase);
 
         backToHomeBtn.addEventListener('click', () => {
             homePageSection.style.display = 'flex';
             phraseDispenserSection.style.display = 'none';
         });
 
+        goToStoryListBtn.addEventListener('click', async () => {
+            homePageSection.style.display = 'none';
+            phraseDispenserSection.style.display = 'none';
+            storyListSection.style.display = 'flex';
+
+            if (phrases.length === 0) {
+                await fetchPhrases();
+            }
+
+            renderStoryList();
+        });
+
+        backToHomeFromListBtn.addEventListener('click', () => {
+            storyListSection.style.display = 'none';
+            homePageSection.style.display = 'flex';
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             homePageSection.style.display = 'flex';
             phraseDispenserSection.style.display = 'none';
+            storyListSection.style.display = 'none';
         });
     </script>
 </body>

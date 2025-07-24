@@ -8,97 +8,88 @@ body {
     background-color: #e0f2fe; /* Light sky blue background */
 }
 .container {
-    background-color: transparent; /* White background for the content area */
+    background-color: transparent;
     text-align: center;
     height: 100%;
     min-width: 100%;
     max-width: 100%;
 }
 h1 {
-    color: #1e3a8a; /* Darker blue for the heading */
-    margin-bottom: 1.5rem; /* Adjust spacing */
+    color: #1e3a8a;
+    margin-bottom: 1.5rem;
 }
 .phrase-display {
-    min-height: 100px; /* Ensure more space for phrases */
+    min-height: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.625rem; /* Slightly larger font size */
-    font-weight: 700; /* Bold */
-    color: #1e3a8a; /* Dark blue text color */
-    background-color: #fffbeb; /* Very light yellow background */
-    margin-bottom: 2.5rem; /* More space below the phrase */
+    font-size: 1.625rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    background-color: #fffbeb;
+    margin-bottom: 0; /* Changed from 2.5rem to 0 for flex layout */
     padding: 1.5rem;
-    border: 3px solid #facc15; /* Vibrant yellow border */
-    border-radius: 1rem; /* More rounded corners for the display area */
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+    border: 3px solid #facc15;
+    border-radius: 1rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 .choose-button {
-    background-image: linear-gradient(to right, #3b82f6, #2563eb); /* Blue gradient */
-    color: #facc15; /* Vibrant yellow text */
-    padding: 1.25rem 3rem; /* Larger padding for button */
-    border-radius: 0.75rem; /* Rounded corners */
-    font-size: 1.25rem; /* Larger font size */
-    font-weight: 800; /* Extra bold text */
+    background-image: linear-gradient(to right, #3b82f6, #2563eb);
+    color: #facc15;
+    padding: 1.25rem 3rem;
+    border-radius: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 800;
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease; /* Smooth transition for hover effects */
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); /* Shadow matching blue gradient */
-    letter-spacing: 0.05em; /* Slightly spaced letters */
-    text-transform: uppercase; /* Uppercase text */
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 .choose-button:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
-    box-shadow: 0 12px 25px rgba(59, 130, 246, 0.6); /* Enhanced shadow on hover */
-    background-image: linear-gradient(to right, #2563eb, #1d4ed8); /* Slightly darker gradient on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(59, 130, 246, 0.6);
+    background-image: linear-gradient(to right, #2563eb, #1d4ed8);
 }
 .choose-button:active {
-    transform: translateY(0); /* Press effect on click */
-    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3); /* Smaller shadow on active */
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
 }
 
-/* New: CSS for the spinning loader */
+/* Loader styles */
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 .image-loader {
-    width: 250px; /* Adjust size as needed */
+    width: 250px;
     height: 250px;
-    display: block; /* Always visible */
-    /* Animation will be toggled by JavaScript */
+    display: block;
 }
 .image-loader.spinning {
-    animation: spin 1.5s linear infinite; /* Apply spin animation only when 'spinning' class is present */
+    animation: spin 1.5s linear infinite;
 }
 
-/* New: Styles for the flex container holding phrase and loader */
+/* Phrase + loader wrapper */
 .content-wrapper {
     display: flex;
-    align-items: center; /* Vertically align items in the center */
-    justify-content: center; /* Horizontally center content */
-    margin-top: 200px; /* Add some space below the wrapper */
-    min-height: 100px; /* Ensure enough height for content */
+    align-items: center;
+    justify-content: center;
+    margin-top: 200px;
+    min-height: 100px;
     gap: 20px;
     width: 100%;
 }
-
 .content-wrapper #phraseDisplay,
 .content-wrapper .image-loader {
-    flex: 1; /* Each takes 50% of the available space */
+    flex: 1;
     height: 100%;
 }
 
-/* New: Adjust phrase-display for flex context */
-.phrase-display {
-    /* Keep existing styles like font-size, color, padding, border-radius */
-    /* Remove margin-bottom if it causes issues with flex layout */
-    margin-bottom: 0; /* Remove margin-bottom from phrase-display as it's now in a flex container */
-}
-
-/* New: Styles for the Home Page */
+/* Home page */
 .home-page-section {
-    display: flex; /* Initially visible */
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
@@ -107,15 +98,13 @@ h1 {
     padding-left: 80px;
     padding-right: 80px;
     height: 100%;
-    /* NEW: Background image properties */
-    background-image: url('shimiBar.jpg'); /* Replaced with your image path */
-    background-size: 100% 100%; /* Cover the entire section */
-    background-position: center; /* Center the image */
-    background-repeat: no-repeat; /* Do not repeat the image */
-    min-height: 300px; /* Ensure enough height to see the background */
-    overflow: hidden; /* Ensure image doesn't spill out of rounded corners */
+    background-image: url('shimiBar.jpg');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 300px;
+    overflow: hidden;
 }
-
 .home-page-section-title {
     display: flex;
     justify-content: flex-end;
@@ -124,11 +113,10 @@ h1 {
     padding-right: 20px;
     padding-top: 20px;
 }
-
 .home-page-section h2 {
     font-size: 48px;
     font-weight: 800;
-    color: white; /* Dark blue */
+    color: white;
     line-height: 1.2;
     padding-bottom: 8px;
 }
@@ -137,32 +125,28 @@ h1 {
     width: 100%;
     justify-content: space-between;
 }
-
 .home-content-row {
     display: flex;
     align-items: center;
     width: 100%;
     margin-bottom: 2rem;
 }
-
 .home-content-row > div,
 .home-content-row > img {
     flex: 1;
-    min-width: 250px; /* Ensure elements don't get too small */
+    min-width: 250px;
     padding: 1rem;
     text-align: center;
 }
-
 .home-page-image {
     max-width: 100%;
     height: auto;
     border-radius: 1rem;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
-
 .home-button {
-    background-image: linear-gradient(to right, #facc15, #eab308); /* Yellow gradient */
-    color: #1e3a8a; /* Dark blue text */
+    background-image: linear-gradient(to right, #facc15, #eab308);
+    color: #1e3a8a;
     padding: 1.25rem 3rem;
     border-radius: 0.75rem;
     font-size: 1.25rem;
@@ -184,12 +168,43 @@ h1 {
     box-shadow: 0 4px 10px rgba(250, 204, 21, 0.3);
 }
 
-/* Hide the phrase dispenser section by default */
+/* Phrase dispenser */
 .phrase-dispenser-section {
-    display: none; /* Initially visible */
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     padding: 24px;
     height: 100%;
+}
+
+/* NEW: Error message styles */
+#error-message {
+    color: #b91c1c; /* Red for errors */
+    background-color: #fee2e2; /* Light red background */
+    border: 1px solid #fca5a5; /* Light red border */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    max-width: 500px;
+    text-align: center;
+    display: none; /* Hidden by default */
+}
+/* Scrollable list container */
+.scrollable-list {
+    max-height: 100%; /* adjust as needed */
+    overflow-y: auto;
+    padding-right: 1rem;
+    margin-top: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    background-color: #fff;
+}
+
+/* Optional: Style list items if using <ul> or <ol> */
+.scrollable-list li {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #eee;
 }
